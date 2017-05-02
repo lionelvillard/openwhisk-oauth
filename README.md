@@ -2,6 +2,8 @@
 
 ## Setup
 
+The `bin/setup-providers` script configures OAuth providers.
+
 The `init.sh` script will populate your OpenWhisk assets. In addition,
 the first time you use the script, it will also prompt you to set up
 oauth credentials with the providers of your choosing.
@@ -12,14 +14,17 @@ This package current supports these providers:
 
    - [github](https://github.com/settings/developers)
    - [google](https://console.developers.google.com/apis/credentials)
+   - [slack](https://api.slack.com/docs/sign-in-with-slack)
 
 ## Demo usage
 
-First, create the backend assets, by executing the script
+First, configure the providers by running `bin/setup-providers` and then
+create the backend assets, by executing the script
 `init.sh`. Then, you can test that this all works by executing the
 `./bin/login` script.
 
 ```
+% ./conf/config.sh
 % ./init.sh
 % ./bin/login github
 {
@@ -41,7 +46,7 @@ wsk action create --sequence A_with_auth oauth/validate,A
 ```
 
 The utility `bin/with-authn` does this, such that `bin/with-authn A`
-will create a sequence named `A-with-authentication`. 
+will create a sequence named `A-with-authentication`.
 
 The `validate` action takes as input this structure, which is included
 the return value of the login action:

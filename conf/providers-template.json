@@ -1,52 +1,68 @@
 {
     "github": {
-	"endpoints": {
-	    "new_oauth_app": "https://github.com/settings/applications/new",
-	    "authorization": "https://github.com/login/oauth/authorize",
-	    "token": "https://github.com/login/oauth/access_token",
-	    "userinfo": "https://api.github.com/user"
-	},
-
-	"token_endpoint_form_is_json": true,
-	"userinfo_identifier": "login",
-	
-	"credentials": {
-	    "client_id": "xxxxxxxxx",
-	    "client_secret": "xxxxxxxxx"
-	}
+        "endpoints": {
+            "new_oauth_app": "https://github.com/settings/applications/new",
+            "authorization": "https://github.com/login/oauth/authorize",
+            "token": "https://github.com/login/oauth/access_token",
+            "userinfo": "https://api.github.com/user"
+        },
+        "token_endpoint_form_is_json": true,
+        "userinfo_identifier": "login",
+        "credentials": {
+            "client_id": "xxxxxxxxx",
+            "client_secret": "xxxxxxxxx"
+        }
     },
-
     "slack": {
-	"endpoints": {
-	    "new_oauth_app": "https://api.slack.com/apps",
-	    "authorization": "https://slack.com/oauth/authorize",
-	    "token": "https://slack.com/api/oauth.access"
-	    "userinfo": "https://slack.com/api/auth.test"
-	},
-	
-	"token_endpoint_form_as_query": true,
-
-	"credentials": {
-	    "client_id": "xxxxxxxxx",
-	    "client_secret": "xxxxxxxxx"
-	}
+        "endpoints": {
+            "new_oauth_app": "https://api.slack.com/apps",
+            "authorization": "https://slack.com/oauth/authorize",
+            "token": "https://slack.com/api/oauth.access",
+            "userinfo": "https://slack.com/api/auth.test"
+        },
+        "token_endpoint_form_as_query": true,
+        "credentials": {
+            "client_id": "xxxxxxxxx",
+            "client_secret": "xxxxxxxxx"
+        }
     },
-    
     "google": {
-	"endpoints": {
-	    "new_oauth_app": "https://console.developers.google.com/apis/credentials",
-	    "authorization": "https://accounts.google.com/o/oauth2/v2/auth",
-	    "token": "https://www.googleapis.com/oauth2/v4/token",
-	    "userinfo": "https://www.googleapis.com/oauth2/v3/userinfo"
-	},
-
-	"authorization_type": "Bearer",
-	"token_endpoint_form": { "grant_type": "authorization_code", "redirect_uri": "http://localhost:15231" },
-	"userinfo_identifier": "email",
-	
-	"credentials": {
-	    "client_id": "xxxxxxxxx",
-	    "client_secret": "xxxxxxxxx"
-	}
+        "endpoints": {
+            "new_oauth_app": "https://console.developers.google.com/apis/credentials",
+            "authorization": "https://accounts.google.com/o/oauth2/v2/auth",
+            "token": "https://www.googleapis.com/oauth2/v4/token",
+            "userinfo": "https://www.googleapis.com/oauth2/v3/userinfo"
+        },
+        "authorization_type": "Bearer",
+        "token_endpoint_form": {
+            "grant_type": "authorization_code",
+            "redirect_uri": "http://localhost:15231"
+        },
+        "userinfo_identifier": "email",
+        "credentials": {
+            "client_id": "xxxxxxxxx",
+            "client_secret": "xxxxxxxxx"
+        }
+    },
+    "bluemix": {
+        "endpoints": {
+            "authorization": "https://login.ng.bluemix.net/UAALoginServerWAR/oauth/authorize",
+            "token": "https://login.ng.bluemix.net/UAALoginServerWAR/oauth/token",
+            "userinfo": "https://uaa.ng.bluemix.net/userinfo"
+        },
+        "token_endpoint_form": {
+            "grant_type": "authorization_code",
+            "response_type": "token",
+            "token_format": "opaque",
+            "redirect_uri": "https://XXX"
+        },
+        "token_endpoint_needs_auth": true,
+        "authorization_type": "Bearer",
+        "userinfo_identifier": "email",
+        "userinfo_identifier_full_record": true,
+        "credentials": {
+            "client_id": "xxxx",
+            "client_secret": "xxxxx"
+        }
     }
 }

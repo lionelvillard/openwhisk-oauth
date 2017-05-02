@@ -1,57 +1,60 @@
 #!/usr/bin/env node
-// -*- mode: javascript -*-
+ // -*- mode: javascript -*-
 
 const fs = require('fs'),
-      open = require('open'),
-      path = require('path'),
-      colors = require('colors'),
-      inquirer = require('inquirer'),
-      providersPath = path.join(__dirname, '..', 'conf', 'providers.json'),
-      providersClientPath = path.join(__dirname, '..', 'conf', 'providers-client.json'),
-      providers_template = require(path.join(__dirname, '..', 'conf', 'providers-template'))
-      providers_client_template = require(path.join(__dirname, '..', 'conf', 'providers-client-template'))
-
-console.log()
-console.log('In the following, use this for your ' + 'callback URL'.red)
-console.log('\t\t' + process.argv[2].blue)
-console.log()
+	open = require('open'),
+	path = require('path'),
+	colors = require('colors'),
+	inquirer = require('inquirer'),
+	providersPath = path.join(__dirname, '..', 'conf', 'providers.json'),
+	providersClientPath = path.join(__dirname, '..', 'conf', 'providers-client.json'),
+	providers_template = require(path.join(__dirname, '..', 'conf', 'providers-template'))
+providers_client_template = require(path.join(__dirname, '..', 'conf', 'providers-client-template'))
 
 const ask = (providerName, provider) => L => {
-    return inquirer.prompt([{
-	name: 'ok',
-	type: 'confirm',
-	message: 'Set up an oauth application with ' + providerName.red + '?'
-    }]).then(answers => new Promise((resolve, reject) => {
-	if (answers.ok) {
-	    open(provider.endpoints.new_oauth_app)
-	    inquirer.prompt([
-		{ name: 'client_id', message: 'Enter your client_id', type: 'input' },
-		{ name: 'client_secret', message: 'Enter your client_secret', type: 'input' }
+	return inquirer.prompt([{
+		name: 'ok',
+		type: 'confirm',
+		message: 'Set up an oauth application with ' + providerName.red + '?'
+	}]).then(answers => new Promise((resolve, reject) => {
+		if (answers.ok) {
+			if (provider.endpoints.new_oauth_app)
+				open(provider.endpoints.new_oauth_app)
+			inquirer.prompt([{
+					name: 'client_id',
+					message: 'Enter your client_id',
+					type: 'input'
+				},
+				{
+					name: 'client_secret',
+					message: 'Enter your client_secret',
+					type: 'input'
+				}
 
-	    ]).then(answers2 => {
-		console.log()
-		provider.credentials.client_id = answers2.client_id
-		provider.credentials.client_secret = answers2.client_secret
+			]).then(answers2 => {
+				console.log()
+				provider.credentials.client_id = answers2.client_id
+				provider.credentials.client_secret = answers2.client_secret
 
-		providers_client_template[providerName].credentials.client_id = answers2.client_id
+				providers_client_template[providerName].credentials.client_id = answers2.client_id
 
-		L.push(provider)
-		resolve(L)
-	    })
+				L.push(provider)
+				resolve(L)
+			})
 
-	} else {
-	    delete providers_template[providerName]
-	    delete providers_client_template[providerName]
-	    resolve(L)
-	}
-    }))
+		} else {
+			delete providers_template[providerName]
+			delete providers_client_template[providerName]
+			resolve(L)
+		}
+	}))
 }
 
 const saveProviders = (providersPath, providers) => new Promise((resolve, reject) => {
-    fs.rename(providersPath, `${providersPath}.bak`,
-                              () => fs.writeFile(providersPath,
-                                                 JSON.stringify(providers, undefined, 4),
-                                                 err => err ? reject(err) : resolve()))
+	fs.rename(providersPath, `${providersPath}.bak`,
+		() => fs.writeFile(providersPath,
+			JSON.stringify(providers, undefined, 4),
+			err => err ? reject(err) : resolve()))
 })
 
 /**
@@ -61,23 +64,26 @@ const saveProviders = (providersPath, providers) => new Promise((resolve, reject
  *
  */
 const saveConfig = L => {
-    if (L.length == 0) {
-	return console.log('Nothing to do, exiting.')
-    }
-	
-    console.log()
-    console.log(providers_template)
-    console.log()
-	
-    inquirer.prompt([{
-	name: 'ok',
-	type: 'confirm',
-	message: 'Please confirm: do you wish to save this configuration?'
-    }])
-        .then(Promise.all[saveProviders(providersPath, providers_template),
-			  saveProviders(providersClientPath, providers_client_template)])
-        .then(() => console.log('ok'))
-	.catch(err => { console.error(err); process.exit(1) })
+	if (L.length == 0) {
+		return console.log('Nothing to do, exiting.')
+	}
+
+	console.log()
+	console.log(providers_template)
+	console.log()
+
+	inquirer.prompt([{
+			name: 'ok',
+			type: 'confirm',
+			message: 'Please confirm: do you wish to save this configuration?'
+		}])
+		.then(Promise.all[saveProviders(providersPath, providers_template),
+			saveProviders(providersClientPath, providers_client_template)])
+		.then(() => console.log('ok'))
+		.catch(err => {
+			console.error(err);
+			process.exit(1)
+		})
 }
 
 /**
@@ -96,6 +102,4 @@ const toArray = (O, f) => Object.keys(O).map(key => f(key, O[key]))
 Promise.each = Ps => Ps.reduce((promise, P) => promise.then(P), Promise.all([]))
 
 Promise.each(toArray(providers_template, ask))
-    .then(saveConfig)
-
-
+	.then(saveConfig)
