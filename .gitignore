@@ -5,3 +5,4 @@ conf/providers.json
 conf/providers-client.json
 conf/acl.json
 conf/endpoints.sh
+openwhisk-oauth.iml
